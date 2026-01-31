@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { PlusCircle, AlertCircle, Clock, CheckCircle, MapPin } from 'lucide-react';
+import { PlusCircle, Clock, MapPin, ChevronRight, Layout } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -24,25 +24,12 @@ const CitizenDashboard = () => {
 
     const getStatusClass = (status) => {
         switch (status) {
-            case 'PENDING': return 'status-pending';
-            case 'ASSIGNED': return 'status-assigned';
-            case 'IN_PROGRESS': return 'status-progress';
-            case 'RESOLVED': return 'status-resolved';
+            case 'PENDING': return 'badge-pending';
+            case 'ASSIGNED': return 'badge-assigned';
+            case 'IN_PROGRESS': return 'badge-progress';
+            case 'RESOLVED': return 'badge-resolved';
             default: return '';
         }
-    };
-
-    const container = {
-        hidden: { opacity: 0 },
-        show: {
-            opacity: 1,
-            transition: { staggerChildren: 0.1 }
-        }
-    };
-
-    const itemAnim = {
-        hidden: { y: 20, opacity: 0 },
-        show: { y: 0, opacity: 1 }
     };
 
     return (
@@ -50,73 +37,84 @@ const CitizenDashboard = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="container"
+            style={{ paddingBottom: '120px' }}
         >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
-                <div>
-                    <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                        Dashboard
-                    </h1>
-                    <p style={{ color: 'var(--text-muted)' }}>Track your reports and civic updates</p>
+            <div style={{ marginTop: '6rem', marginBottom: '5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--sandal-dark)', fontWeight: '800', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem' }}>
+                    <Layout size={16} />
+                    Perspective
                 </div>
-                <Link to="/report" className="btn btn-primary" style={{ padding: '14px 28px' }}>
-                    <PlusCircle size={20} style={{ marginRight: '10px' }} />
-                    Report Issue
-                </Link>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '40px', flexWrap: 'wrap' }}>
+                    <div style={{ flex: '1', minWidth: '300px' }}>
+                        <h1>Citizen Hub</h1>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '1.25rem', maxWidth: '600px', fontWeight: '500' }}>
+                            Transparency in action. Monitor the status of community reports and contribute to a better urban environment.
+                        </p>
+                    </div>
+                    <Link to="/report" className="btn btn-primary" style={{ padding: '16px 32px', fontSize: '1rem' }}>
+                        <PlusCircle size={20} />
+                        File a Report
+                    </Link>
+                </div>
             </div>
 
-            <motion.div
-                variants={container}
-                initial="hidden"
-                animate="show"
-                className="grid"
-            >
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
                 <AnimatePresence>
-                    {complaints.map(item => (
+                    {complaints.map((item, idx) => (
                         <motion.div
                             key={item.id}
-                            variants={itemAnim}
-                            layout
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: idx * 0.05, duration: 0.5 }}
                             className="card"
+                            style={{ padding: '32px', display: 'flex', flexDirection: 'column' }}
                         >
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                                <span className={`status-badge ${getStatusClass(item.status)}`}>{item.status}</span>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+                                <span className={`badge ${getStatusClass(item.status)}`}>{item.status}</span>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: '600' }}>
                                     <Clock size={14} />
-                                    {new Date(item.createdAt).toLocaleDateString()}
+                                    {new Date(item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                                 </div>
                             </div>
-                            <h3 style={{ marginBottom: '12px', fontSize: '1.25rem' }}>{item.title}</h3>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '20px', lineHeight: '1.6' }}>{item.description}</p>
 
-                            <div style={{ borderTop: '1px solid var(--glass-border)', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span style={{ fontSize: '0.8rem', fontWeight: '600', color: 'var(--primary-light)' }}>
-                                    #{item.category.toUpperCase()}
-                                </span>
-                                {item.latitude && (
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)', fontSize: '0.75rem' }}>
-                                        <MapPin size={12} />
-                                        Location Tagged
+                            <h3 style={{ marginBottom: '12px', fontSize: '1.4rem', fontWeight: '800', color: 'var(--text-main)', letterSpacing: '-0.02em' }}>{item.title}</h3>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '32px', lineHeight: '1.6', flex: '1' }}>
+                                {item.description}
+                            </p>
+
+                            <div style={{
+                                marginTop: 'auto',
+                                paddingTop: '24px',
+                                borderTop: '1px solid var(--border-subtle)',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <div style={{ padding: '8px', borderRadius: '10px', background: 'var(--surface-warm)', border: '1px solid var(--border-subtle)' }}>
+                                        <MapPin size={14} color="var(--sandal-dark)" />
                                     </div>
-                                )}
+                                    <span style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-main)', textTransform: 'uppercase' }}>
+                                        {item.category}
+                                    </span>
+                                </div>
+                                <div style={{ color: 'var(--sandal-medium)' }}>
+                                    <ChevronRight size={20} />
+                                </div>
                             </div>
                         </motion.div>
                     ))}
                 </AnimatePresence>
-            </motion.div>
+            </div>
 
             {!loading && complaints.length === 0 && (
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    style={{ textAlign: 'center', padding: '6rem 2rem', background: 'rgba(255,255,255,0.02)', borderRadius: '24px', border: '1px dashed var(--glass-border)' }}
-                >
-                    <AlertCircle size={64} style={{ marginBottom: '20px', color: 'var(--text-muted)', opacity: 0.5 }} />
-                    <h2 style={{ marginBottom: '12px' }}>No reports yet</h2>
-                    <p style={{ color: 'var(--text-muted)', maxWidth: '400px', margin: '0 auto 24px' }}>
-                        Your dashboard is empty. Report any civic issues in your area to help the community.
+                <div className="card" style={{ textAlign: 'center', padding: '120px 40px', border: '2px dashed var(--border)', background: 'transparent', boxShadow: 'none' }}>
+                    <h2 style={{ marginBottom: '16px', color: 'var(--text-muted)' }}>Quiet Community</h2>
+                    <p style={{ color: 'var(--text-muted)', maxWidth: '440px', margin: '0 auto 32px', fontSize: '1.1rem' }}>
+                        No active reports found. If you see something that needs attention, please file a report.
                     </p>
-                    <Link to="/report" className="btn btn-primary">Submit First Report</Link>
-                </motion.div>
+                    <Link to="/report" className="btn btn-outline">Initial Report</Link>
+                </div>
             )}
         </motion.div>
     );

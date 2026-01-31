@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Lock, Mail, ArrowRight, Sparkles } from 'lucide-react';
+import { Lock, Mail, ArrowRight, UserCheck } from 'lucide-react';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -18,109 +18,87 @@ const Login = () => {
             await login(email, password);
             navigate('/');
         } catch (err) {
-            alert('Login failed: ' + (err.response?.data?.error || err.message || 'Unknown error'));
+            alert('Authentication Failed: Credentials not recognized.');
         } finally {
             setIsSubmitting(false);
         }
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-            className="auth-container"
-        >
-            <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-                <motion.div
-                    initial={{ scale: 0, rotate: -45 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.2 }}
-                    style={{
-                        width: '72px',
-                        height: '72px',
-                        background: 'var(--gradient-main)',
-                        borderRadius: '22px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        margin: '0 auto 1.5rem',
-                        boxShadow: '0 20px 40px var(--primary-glow)',
-                        position: 'relative'
-                    }}
-                >
-                    <Sparkles color="white" size={32} />
-                    <motion.div
-                        animate={{ opacity: [0.2, 0.5, 0.2] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        style={{ position: 'absolute', inset: '-10px', background: 'var(--primary)', filter: 'blur(20px)', zIndex: -1, borderRadius: '50%' }}
-                    />
-                </motion.div>
-                <h1 style={{ fontSize: '2.8rem', marginBottom: '0.75rem', fontWeight: '800', letterSpacing: '-0.04em' }}>Welcome</h1>
-                <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', fontWeight: '500' }}>Enter your credentials to access the hub</p>
-            </div>
-
-            <form onSubmit={handleSubmit}>
-                <div className="input-group">
-                    <label htmlFor="login-email">Email Address</label>
-                    <div style={{ position: 'relative' }}>
-                        <Mail style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} size={20} />
-                        <input
-                            id="login-email"
-                            type="email"
-                            style={{ paddingLeft: '56px', background: 'rgba(255,255,255,0.02)' }}
-                            placeholder="your@email.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            disabled={isSubmitting}
-                        />
-                    </div>
-                </div>
-
-                <div className="input-group" style={{ marginBottom: '1rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                        <label htmlFor="login-password" style={{ marginBottom: 0 }}>Password</label>
-                        <a href="#" style={{ fontSize: '0.8rem', color: 'var(--primary-light)', textDecoration: 'none', fontWeight: '700' }}>Forgot?</a>
-                    </div>
-                    <div style={{ position: 'relative' }}>
-                        <Lock style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} size={20} />
-                        <input
-                            id="login-password"
-                            type="password"
-                            style={{ paddingLeft: '56px', background: 'rgba(255,255,255,0.02)' }}
-                            placeholder="••••••••"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            disabled={isSubmitting}
-                        />
-                    </div>
-                </div>
-
-                <button
-                    type="submit"
-                    className="btn btn-primary"
-                    style={{ width: '100%', padding: '20px', fontSize: '1.15rem', marginTop: '2rem', gap: '12px' }}
-                    disabled={isSubmitting}
-                >
-                    {isSubmitting ? 'Authenticating...' : 'Sign In to Dashboard'}
-                    {!isSubmitting && <ArrowRight size={22} />}
-                </button>
-            </form>
-
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface-warm)', padding: '24px' }}>
             <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                style={{ marginTop: '3rem', textAlign: 'center', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px solid var(--glass-border)' }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="card"
+                style={{ maxWidth: '480px', width: '100%', padding: '60px', boxShadow: '0 20px 60px -10px rgba(0,0,0,0.08)' }}
             >
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-                    Don't have an account yet? <br />
-                    <Link to="/register" style={{ color: 'white', fontWeight: '800', textDecoration: 'none', display: 'inline-block', marginTop: '8px', borderBottom: '2px solid var(--primary)' }}>Start reporting today</Link>
-                </p>
+                <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+                    <div style={{ width: '64px', height: '64px', background: 'var(--sandal-light)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', border: '1px solid var(--border)' }}>
+                        <UserCheck color="var(--sandal-dark)" size={32} />
+                    </div>
+                    <h1>Log In</h1>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', fontWeight: '500' }}>Enter your credentials to continue.</p>
+                </div>
+
+                <form onSubmit={handleSubmit}>
+                    <div className="input-group">
+                        <label htmlFor="login-email">Email Identity</label>
+                        <div style={{ position: 'relative' }}>
+                            <Mail style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} size={18} />
+                            <input
+                                id="login-email"
+                                type="email"
+                                className="input-field"
+                                style={{ paddingLeft: '48px' }}
+                                placeholder="name@organization.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                disabled={isSubmitting}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="input-group" style={{ marginBottom: '1rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                            <label htmlFor="login-password" style={{ marginBottom: 0 }}>Private Key</label>
+                            <a href="#" style={{ fontSize: '0.75rem', color: 'var(--sandal-dark)', textDecoration: 'none', fontWeight: '800' }}>Forgotten?</a>
+                        </div>
+                        <div style={{ position: 'relative' }}>
+                            <Lock style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} size={18} />
+                            <input
+                                id="login-password"
+                                type="password"
+                                className="input-field"
+                                style={{ paddingLeft: '48px' }}
+                                placeholder="••••••••"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                disabled={isSubmitting}
+                            />
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="btn btn-primary"
+                        style={{ width: '100%', padding: '18px', marginTop: '2.5rem', justifyContent: 'center' }}
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? 'Verifying...' : 'Establish Connection'}
+                        {!isSubmitting && <ArrowRight size={20} />}
+                    </button>
+                </form>
+
+                <div style={{ marginTop: '4rem', textAlign: 'center', borderTop: '1px solid var(--border-subtle)', paddingTop: '2.5rem' }}>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+                        No account active? <br />
+                        <Link to="/register" style={{ color: 'var(--text-main)', fontWeight: '800', textDecoration: 'none', display: 'inline-block', marginTop: '10px' }}>Join the community</Link>
+                    </p>
+                </div>
             </motion.div>
-        </motion.div>
+        </div>
     );
 };
 

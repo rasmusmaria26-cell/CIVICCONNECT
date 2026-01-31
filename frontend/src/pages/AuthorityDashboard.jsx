@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck, User, MapPin, Tag } from 'lucide-react';
+import { Briefcase, User, MapPin, Tag, Download, Settings } from 'lucide-react';
 
 const AuthorityDashboard = () => {
     const [complaints, setComplaints] = useState([]);
@@ -20,51 +20,67 @@ const AuthorityDashboard = () => {
     };
 
     const handleStatusChange = async (id, newStatus) => {
-        const remarks = prompt("Add a remark for this status change:");
+        const remarks = prompt("Official Remark for Status Modification:");
         if (remarks === null) return;
 
         try {
             await axios.patch(`http://localhost:5000/api/complaints/${id}/status`, {
                 status: newStatus,
-                remarks: remarks || 'Status updated by authority'
+                remarks: remarks || 'Standard status update'
             });
             fetchComplaints();
         } catch (err) {
-            alert("Failed to update status");
+            alert("Update Failed: Protocol Error");
+        }
+    };
+
+    const getStatusClass = (status) => {
+        switch (status) {
+            case 'PENDING': return 'badge-pending';
+            case 'ASSIGNED': return 'badge-assigned';
+            case 'IN_PROGRESS': return 'badge-progress';
+            case 'RESOLVED': return 'badge-resolved';
+            default: return '';
         }
     };
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             className="container"
+            style={{ paddingBottom: '120px' }}
         >
-            <div style={{ marginBottom: '3rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '0.5rem' }}>
-                    <ShieldCheck color="var(--primary-light)" size={32} />
-                    <h1 style={{ fontSize: '2.5rem', background: 'var(--gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                        Authority Portal
-                    </h1>
+            <div style={{ marginTop: '6rem', marginBottom: '5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '24px' }}>
+                <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--sandal-dark)', fontWeight: '800', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.25rem' }}>
+                        <Briefcase size={16} />
+                        Administrative Portal
+                    </div>
+                    <h1>Authority Terminal</h1>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '1.25rem', maxWidth: '600px' }}>Oversee and resolve urban infrastructure reports with precision.</p>
                 </div>
-                <p style={{ color: 'var(--text-muted)' }}>Manage and resolve community reports with priority.</p>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                    <button className="btn btn-outline" style={{ border: '1px solid var(--border)' }}>
+                        <Settings size={18} />
+                        Preferences
+                    </button>
+                    <button className="btn btn-primary">
+                        <Download size={18} />
+                        Export Manifest
+                    </button>
+                </div>
             </div>
 
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="card"
-                style={{ padding: '0', overflow: 'hidden', background: 'rgba(15, 23, 42, 0.4)' }}
-            >
+            <div className="card" style={{ padding: '0', overflow: 'hidden', border: '1px solid var(--border)' }}>
                 <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <table>
                         <thead>
-                            <tr style={{ textAlign: 'left', background: 'rgba(255,255,255,0.03)' }}>
-                                <th style={{ padding: '20px', fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Status</th>
-                                <th style={{ padding: '20px', fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Issue Details</th>
-                                <th style={{ padding: '20px', fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Citizen</th>
-                                <th style={{ padding: '20px', fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Action</th>
+                            <tr>
+                                <th>Report Status</th>
+                                <th>Subject & Details</th>
+                                <th>Reporter Context</th>
+                                <th>Action Control</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -72,40 +88,41 @@ const AuthorityDashboard = () => {
                                 {complaints.map((item, idx) => (
                                     <motion.tr
                                         key={item.id}
-                                        initial={{ opacity: 0, x: -10 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: idx * 0.05 }}
-                                        style={{ borderBottom: '1px solid var(--glass-border)', transition: 'background 0.2s' }}
-                                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
-                                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ delay: idx * 0.03 }}
+                                        style={{ borderBottom: '1px solid var(--border-subtle)' }}
                                     >
-                                        <td style={{ padding: '20px' }}>
-                                            <span className={`status-badge status-${item.status.toLowerCase().replace('_', '')}`}>
+                                        <td style={{ paddingLeft: '32px' }}>
+                                            <span className={`badge ${getStatusClass(item.status)}`}>
                                                 {item.status}
                                             </span>
                                         </td>
-                                        <td style={{ padding: '20px' }}>
-                                            <div style={{ fontWeight: '600', marginBottom: '4px', fontSize: '1rem' }}>{item.title}</div>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                                                <Tag size={12} /> {item.category}
-                                                <span style={{ opacity: 0.3 }}>|</span>
-                                                <MapPin size={12} /> {item.latitude?.toFixed(2)}, {item.longitude?.toFixed(2)}
-                                            </div>
-                                        </td>
-                                        <td style={{ padding: '20px' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                    <User size={12} />
+                                        <td>
+                                            <div style={{ fontWeight: '800', marginBottom: '6px', fontSize: '1.1rem', color: 'var(--text-main)', letterSpacing: '-0.01em' }}>{item.title}</div>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                    <Tag size={12} color="var(--primary)" /> {item.category}
                                                 </div>
-                                                <span style={{ fontSize: '0.9rem' }}>{item.citizen?.name}</span>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                    <MapPin size={12} color="var(--accent)" /> {item.latitude?.toFixed(4)}, {item.longitude?.toFixed(4)}
+                                                </div>
                                             </div>
                                         </td>
-                                        <td style={{ padding: '20px' }}>
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                                <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'var(--surface-warm)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border)' }}>
+                                                    <User size={14} color="var(--sandal-dark)" />
+                                                </div>
+                                                <span style={{ fontSize: '0.9rem', fontWeight: '800' }}>{item.citizen?.name}</span>
+                                            </div>
+                                        </td>
+                                        <td style={{ paddingRight: '32px' }}>
                                             <select
                                                 value={item.status}
                                                 onChange={(e) => handleStatusChange(item.id, e.target.value)}
-                                                className="glass"
-                                                style={{ padding: '8px 12px', border: '1px solid var(--glass-border)', color: 'white', background: 'rgba(0,0,0,0.2)' }}
+                                                className="input-field"
+                                                style={{ padding: '10px 14px', width: 'auto', minWidth: '150px', fontSize: '0.85rem', fontWeight: '700', borderRadius: '10px' }}
                                             >
                                                 <option value="PENDING">Pending</option>
                                                 <option value="ASSIGNED">Assigned</option>
@@ -119,7 +136,7 @@ const AuthorityDashboard = () => {
                         </tbody>
                     </table>
                 </div>
-            </motion.div>
+            </div>
         </motion.div>
     );
 };

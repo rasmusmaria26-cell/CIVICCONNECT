@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { MapPin } from 'lucide-react';
+import { MapPin, ArrowLeft, Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const ReportComplaint = () => {
@@ -28,7 +28,7 @@ const ReportComplaint = () => {
                     setLocating(false);
                 },
                 () => {
-                    alert("Could not detect location. Using default.");
+                    alert("Location awareness failed. Using manual defaults.");
                     setLocating(false);
                 }
             );
@@ -41,32 +41,37 @@ const ReportComplaint = () => {
             await axios.post('http://localhost:5000/api/complaints', formData);
             navigate('/');
         } catch (err) {
-            alert("Failed to submit complaint");
+            alert("Submission failed. Please try again.");
         }
     };
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
             className="container"
-            style={{ maxWidth: '640px', marginTop: '5rem' }}
+            style={{ maxWidth: '720px', paddingBottom: '120px' }}
         >
-            <div className="card" style={{ padding: '48px', position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: 'var(--gradient)' }}></div>
+            <div style={{ marginTop: '6rem', marginBottom: '4rem' }}>
+                <button
+                    onClick={() => navigate(-1)}
+                    style={{ background: 'none', border: 'none', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: '700', fontSize: '0.9rem', marginBottom: '2rem' }}
+                >
+                    <ArrowLeft size={18} />
+                    Back to Hub
+                </button>
+                <h1>File a Report</h1>
+                <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem', fontWeight: '500' }}>Provide precise details about the urban issue you've identified.</p>
+            </div>
 
-                <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-                    <h1 style={{ fontSize: '2.5rem', marginBottom: '0.75rem', fontWeight: '800' }}>Report an Issue</h1>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>Submit details to the nearest urban authority.</p>
-                </div>
-
+            <div className="card" style={{ padding: '60px', boxShadow: '0 20px 60px -10px rgba(0,0,0,0.05)' }}>
                 <form onSubmit={handleSubmit}>
                     <div className="input-group">
-                        <label>Issue Title</label>
+                        <label>Issue Subject</label>
                         <input
                             type="text"
-                            placeholder="Briefly name the problem..."
+                            className="input-field"
+                            placeholder="Briefly state the problem..."
                             value={formData.title}
                             onChange={e => setFormData({ ...formData, title: e.target.value })}
                             required
@@ -74,23 +79,25 @@ const ReportComplaint = () => {
                     </div>
 
                     <div className="input-group">
-                        <label>Category</label>
+                        <label>Classification</label>
                         <select
+                            className="input-field"
                             value={formData.category}
                             onChange={e => setFormData({ ...formData, category: e.target.value })}
                         >
-                            <option value="Road">Roads & Infrastructure</option>
-                            <option value="Water">Water & Sewage</option>
-                            <option value="Garbage">Garbage & Sanitation</option>
-                            <option value="Electricity">Electricity & Lighting</option>
+                            <option value="Road">Infrastructure & Roads</option>
+                            <option value="Water">Water Systems</option>
+                            <option value="Garbage">Public Sanitation</option>
+                            <option value="Electricity">Power & Lighting</option>
                         </select>
                     </div>
 
                     <div className="input-group">
-                        <label>Extensive Description</label>
+                        <label>Report Description</label>
                         <textarea
-                            rows="5"
-                            placeholder="Help authorities understand the urgency..."
+                            rows="6"
+                            className="input-field"
+                            placeholder="Help us understand the situation in detail..."
                             value={formData.description}
                             onChange={e => setFormData({ ...formData, description: e.target.value })}
                             required
@@ -100,19 +107,19 @@ const ReportComplaint = () => {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '16px',
-                        padding: '20px',
-                        background: 'rgba(255,255,255,0.03)',
-                        border: '1px solid var(--glass-border)',
+                        gap: '20px',
+                        padding: '24px',
+                        background: 'var(--surface-warm)',
+                        border: '1px solid var(--border)',
                         borderRadius: '16px',
-                        marginBottom: '40px'
+                        marginBottom: '44px'
                     }}>
-                        <div style={{ padding: '10px', borderRadius: '12px', background: 'rgba(99, 102, 241, 0.1)' }}>
-                            <MapPin size={24} color="var(--primary-light)" />
+                        <div style={{ padding: '12px', borderRadius: '12px', background: 'var(--sandal-light)', border: '1px solid var(--border)' }}>
+                            <MapPin size={24} color="var(--sandal-dark)" />
                         </div>
                         <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '700', marginBottom: '4px' }}>Detected Location</div>
-                            <div style={{ fontSize: '1rem', fontWeight: '600' }}>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '800', marginBottom: '4px' }}>Incident Location</div>
+                            <div style={{ fontSize: '1.1rem', fontWeight: '700', color: 'var(--text-main)' }}>
                                 {locating ? 'Searching coordinates...' : `${formData.latitude.toFixed(6)}, ${formData.longitude.toFixed(6)}`}
                             </div>
                         </div>
@@ -120,16 +127,17 @@ const ReportComplaint = () => {
                             <button
                                 type="button"
                                 onClick={detectLocation}
-                                className="btn"
-                                style={{ background: 'rgba(255,255,255,0.05)', padding: '8px 16px', fontSize: '0.8rem' }}
+                                className="btn btn-outline"
+                                style={{ padding: '8px 16px', fontSize: '0.8rem', borderRadius: '8px' }}
                             >
                                 Refresh
                             </button>
                         )}
                     </div>
 
-                    <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '18px', fontSize: '1.1rem' }}>
-                        Submit Formal Report
+                    <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '22px', fontSize: '1.1rem', justifyContent: 'center' }}>
+                        <Send size={18} />
+                        Confirm and Submit
                     </button>
                 </form>
             </div>

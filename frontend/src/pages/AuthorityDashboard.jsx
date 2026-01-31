@@ -13,9 +13,14 @@ const AuthorityDashboard = () => {
     const fetchComplaints = async () => {
         try {
             const res = await axios.get('http://localhost:5000/api/complaints');
-            setComplaints(res.data);
+            if (Array.isArray(res.data)) {
+                setComplaints(res.data);
+            } else {
+                setComplaints([]);
+            }
         } catch (err) {
             console.error(err);
+            setComplaints([]);
         }
     };
 

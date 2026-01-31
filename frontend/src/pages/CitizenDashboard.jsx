@@ -68,28 +68,39 @@ const CitizenDashboard = () => {
                     </div>
                 </div>
 
-                {/* Summary Stats Bar - Non-Generic Layout */}
-                <div style={{ display: 'flex', gap: '48px', marginTop: '4rem', padding: '32px 0', borderTop: '1px solid var(--border-subtle)' }}>
-                    <div>
-                        <div style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px' }}>Active Manifest</div>
-                        <div style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--text-main)', display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                            {stats.total} <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: '600' }}>Inquiries</span>
+                {/* Summary Stats Bar - Refined Architectural Slab */}
+                <div style={{
+                    display: 'flex',
+                    gap: '64px',
+                    marginTop: '5rem',
+                    padding: '40px 48px',
+                    background: 'white',
+                    borderRadius: '24px',
+                    border: '1px solid var(--border)',
+                    boxShadow: '0 10px 40px -20px rgba(140, 123, 108, 0.2)',
+                    alignItems: 'center'
+                }}>
+                    <div style={{ flex: 'none' }}>
+                        <div style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '0.05em' }}>Active Manifest</div>
+                        <div style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--text-main)', display: 'flex', alignItems: 'baseline', gap: '10px' }}>
+                            {stats.total} <span style={{ fontSize: '1rem', color: 'var(--text-muted)', fontWeight: '600' }}>Inquiries</span>
                         </div>
                     </div>
-                    <div style={{ width: '1px', background: 'var(--border)' }}></div>
-                    <div>
-                        <div style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px' }}>Resolution Rate</div>
-                        <div style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--primary)', display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                            {stats.total > 0 ? Math.round((stats.resolved / stats.total) * 100) : 0}% <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: '600' }}>Efficiency</span>
+                    <div style={{ width: '1px', height: '60px', background: 'var(--border-subtle)' }}></div>
+                    <div style={{ flex: 'none' }}>
+                        <div style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '0.05em' }}>Resolution Rate</div>
+                        <div style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--primary)', display: 'flex', alignItems: 'baseline', gap: '10px' }}>
+                            {stats.total > 0 ? Math.round((stats.resolved / stats.total) * 100) : 0}% <span style={{ fontSize: '1rem', color: 'var(--text-muted)', fontWeight: '600' }}>Efficiency</span>
                         </div>
                     </div>
-                    <div style={{ width: '1px', background: 'var(--border)' }}></div>
-                    <div style={{ flex: 1, textAlign: 'right', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '12px' }}>
+                    <div style={{ flex: 1, textAlign: 'right', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '16px' }}>
                         <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontSize: '0.85rem', fontWeight: '800' }}>Local Authority Active</div>
-                            <div style={{ fontSize: '0.75rem', color: '#166534', fontWeight: '700' }}>Operational Status</div>
+                            <div style={{ fontSize: '0.95rem', fontWeight: '800', color: 'var(--text-main)' }}>Local Authority Active</div>
+                            <div style={{ fontSize: '0.8rem', color: '#166534', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.02em', marginTop: '2px' }}>Operational Status</div>
                         </div>
-                        <CheckCircle size={24} color="#166534" />
+                        <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <CheckCircle size={24} color="#166534" strokeWidth={2.5} />
+                        </div>
                     </div>
                 </div>
             </div>

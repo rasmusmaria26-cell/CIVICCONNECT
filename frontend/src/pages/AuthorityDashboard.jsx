@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, User, MapPin, Tag, Download, Settings } from 'lucide-react';
+import { Briefcase, User, MapPin, Tag, Download, Settings, BarChart3, Database, ShieldCheck } from 'lucide-react';
 
 const AuthorityDashboard = () => {
     const [complaints, setComplaints] = useState([]);
@@ -19,18 +19,24 @@ const AuthorityDashboard = () => {
         }
     };
 
+    const stats = {
+        total: complaints.length,
+        resolved: complaints.filter(c => c.status === 'RESOLVED').length,
+        inProgress: complaints.filter(c => c.status === 'IN_PROGRESS' || c.status === 'ASSIGNED').length,
+    };
+
     const handleStatusChange = async (id, newStatus) => {
-        const remarks = prompt("Official Remark for Status Modification:");
+        const remarks = prompt("Official Administrative Remark for Progress Update:");
         if (remarks === null) return;
 
         try {
             await axios.patch(`http://localhost:5000/api/complaints/${id}/status`, {
                 status: newStatus,
-                remarks: remarks || 'Standard status update'
+                remarks: remarks || 'System protocol update'
             });
             fetchComplaints();
         } catch (err) {
-            alert("Update Failed: Protocol Error");
+            alert("Administrative Update Failure.");
         }
     };
 
@@ -51,36 +57,73 @@ const AuthorityDashboard = () => {
             className="container"
             style={{ paddingBottom: '120px' }}
         >
-            <div style={{ marginTop: '6rem', marginBottom: '5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '24px' }}>
-                <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--sandal-dark)', fontWeight: '800', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.25rem' }}>
-                        <Briefcase size={16} />
-                        Administrative Portal
-                    </div>
-                    <h1>Authority Terminal</h1>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '1.25rem', maxWidth: '600px' }}>Oversee and resolve urban infrastructure reports with precision.</p>
+            <div className="header-surface"></div>
+
+            <div style={{ marginTop: '6rem', marginBottom: '5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--sandal-dark)', fontWeight: '800', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '1.25rem' }}>
+                    <ShieldCheck size={16} />
+                    High-Level Civic Oversight
                 </div>
-                <div style={{ display: 'flex', gap: '12px' }}>
-                    <button className="btn btn-outline" style={{ border: '1px solid var(--border)' }}>
-                        <Settings size={18} />
-                        Preferences
-                    </button>
-                    <button className="btn btn-primary">
-                        <Download size={18} />
-                        Export Manifest
-                    </button>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '24px', flexWrap: 'wrap' }}>
+                    <div>
+                        <h1>Authority Terminal</h1>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '1.3rem', maxWidth: '640px', fontWeight: '500' }}>
+                            Advanced management matrix for urban infrastructure resolution and cross-departmental coordination.
+                        </p>
+                    </div>
+                    <div style={{ display: 'flex', gap: '16px' }}>
+                        <button className="btn btn-outline" style={{ background: 'white' }}>
+                            <Settings size={18} />
+                            Governance Config
+                        </button>
+                        <button className="btn btn-primary">
+                            <Download size={18} />
+                            Generate Manifest
+                        </button>
+                    </div>
+                </div>
+
+                {/* Dashboard Metrics Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', marginTop: '4rem' }}>
+                    <div className="card" style={{ padding: '32px', background: 'white', border: '1px solid var(--border)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px', color: 'var(--text-muted)' }}>
+                            <Database size={18} />
+                            <span style={{ fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase' }}>Active Database</span>
+                        </div>
+                        <div style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--text-main)' }}>{stats.total}</div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '600', marginTop: '4px' }}>Total Reports Cataloged</div>
+                    </div>
+
+                    <div className="card" style={{ padding: '32px', background: 'white', border: '1px solid var(--border)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px', color: 'var(--sandal-dark)' }}>
+                            <BarChart3 size={18} />
+                            <span style={{ fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase' }}>Resolution Metric</span>
+                        </div>
+                        <div style={{ fontSize: '2.5rem', fontWeight: '800', color: '#166534' }}>{stats.resolved}</div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '600', marginTop: '4px' }}>Reports Successfully Closed</div>
+                    </div>
+
+                    <div className="card" style={{ padding: '32px', background: 'white', border: '1px solid var(--border)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px', color: '#b45309' }}>
+                            <Activity size={18} />
+                            <span style={{ fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase' }}>Workflow Load</span>
+                        </div>
+                        <div style={{ fontSize: '2.5rem', fontWeight: '800', color: '#b45309' }}>{stats.inProgress}</div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '600', marginTop: '4px' }}>Reports Under Processing</div>
+                    </div>
                 </div>
             </div>
 
-            <div className="card" style={{ padding: '0', overflow: 'hidden', border: '1px solid var(--border)' }}>
+            <div className="card" style={{ padding: '0', overflow: 'hidden', border: '1px solid var(--border)', background: 'white', borderRadius: '24px', boxShadow: 'var(--shadow-soft)' }}>
                 <div style={{ overflowX: 'auto' }}>
                     <table>
                         <thead>
                             <tr>
-                                <th>Report Status</th>
-                                <th>Subject & Details</th>
-                                <th>Reporter Context</th>
-                                <th>Action Control</th>
+                                <th style={{ paddingLeft: '40px' }}>Lifecycle Status</th>
+                                <th>Subject & Intelligence</th>
+                                <th>Reporting Entity</th>
+                                <th style={{ paddingRight: '40px' }}>Administrative Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -90,45 +133,50 @@ const AuthorityDashboard = () => {
                                         key={item.id}
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
-                                        transition={{ delay: idx * 0.03 }}
-                                        style={{ borderBottom: '1px solid var(--border-subtle)' }}
+                                        transition={{ delay: idx * 0.02 }}
+                                        style={{ borderBottom: '1px solid var(--border-subtle)', background: idx % 2 === 0 ? 'transparent' : 'var(--surface-warm)' }}
                                     >
-                                        <td style={{ paddingLeft: '32px' }}>
+                                        <td style={{ paddingLeft: '40px' }}>
                                             <span className={`badge ${getStatusClass(item.status)}`}>
                                                 {item.status}
                                             </span>
                                         </td>
-                                        <td>
-                                            <div style={{ fontWeight: '800', marginBottom: '6px', fontSize: '1.1rem', color: 'var(--text-main)', letterSpacing: '-0.01em' }}>{item.title}</div>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600' }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                    <Tag size={12} color="var(--primary)" /> {item.category}
+                                        <td style={{ padding: '32px 24px' }}>
+                                            <div style={{ fontWeight: '800', marginBottom: '8px', fontSize: '1.15rem', color: 'var(--text-main)', letterSpacing: '-0.015em' }}>{item.title}</div>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: '600' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    <Tag size={14} color="var(--primary)" /> {item.category}
                                                 </div>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                    <MapPin size={12} color="var(--accent)" /> {item.latitude?.toFixed(4)}, {item.longitude?.toFixed(4)}
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    <MapPin size={14} color="var(--sandal-dark)" /> {item.latitude?.toFixed(4)}, {item.longitude?.toFixed(4)}
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                                                <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border)' }}>
+                                                    <User size={16} color="var(--sandal-dark)" />
+                                                </div>
+                                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                                    <span style={{ fontSize: '0.95rem', fontWeight: '800', color: 'var(--text-main)', lineHeight: '1' }}>{item.citizen?.name}</span>
+                                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase', marginTop: '4px' }}>Citizen Operator</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style={{ paddingRight: '40px' }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                                <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'var(--surface-warm)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border)' }}>
-                                                    <User size={14} color="var(--sandal-dark)" />
-                                                </div>
-                                                <span style={{ fontSize: '0.9rem', fontWeight: '800' }}>{item.citizen?.name}</span>
+                                                <select
+                                                    value={item.status}
+                                                    onChange={(e) => handleStatusChange(item.id, e.target.value)}
+                                                    className="input-field"
+                                                    style={{ padding: '10px 14px', width: 'auto', minWidth: '160px', fontSize: '0.85rem', fontWeight: '800', borderRadius: '10px', background: 'white' }}
+                                                >
+                                                    <option value="PENDING">Pending Review</option>
+                                                    <option value="ASSIGNED">Assign Unit</option>
+                                                    <option value="IN_PROGRESS">Active Work</option>
+                                                    <option value="RESOLVED">Final Resolution</option>
+                                                </select>
                                             </div>
-                                        </td>
-                                        <td style={{ paddingRight: '32px' }}>
-                                            <select
-                                                value={item.status}
-                                                onChange={(e) => handleStatusChange(item.id, e.target.value)}
-                                                className="input-field"
-                                                style={{ padding: '10px 14px', width: 'auto', minWidth: '150px', fontSize: '0.85rem', fontWeight: '700', borderRadius: '10px' }}
-                                            >
-                                                <option value="PENDING">Pending</option>
-                                                <option value="ASSIGNED">Assigned</option>
-                                                <option value="IN_PROGRESS">In Progress</option>
-                                                <option value="RESOLVED">Resolved</option>
-                                            </select>
                                         </td>
                                     </motion.tr>
                                 ))}

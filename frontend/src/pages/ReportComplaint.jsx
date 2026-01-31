@@ -38,8 +38,7 @@ const ReportComplaint = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-            await axios.post(`${apiUrl}/api/complaints`, formData);
+            await axios.post('/api/complaints', formData);
             navigate('/');
         } catch (err) {
             alert("Submission failed. Please try again.");

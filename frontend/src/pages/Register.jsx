@@ -35,8 +35,8 @@ const Register = () => {
                 style={{ maxWidth: '540px', width: '100%', padding: '60px', boxShadow: '0 20px 60px -10px rgba(0,0,0,0.08)' }}
             >
                 <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-                    <div style={{ width: '64px', height: '64px', background: 'var(--sandal-light)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', border: '1px solid var(--border)' }}>
-                        <BookOpen color="var(--sandal-dark)" size={32} />
+                    <div style={{ width: '80px', height: '80px', background: 'white', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', border: '1px solid var(--border)', overflow: 'hidden', boxShadow: 'var(--shadow-soft)' }}>
+                        <img src="/logo.png" alt="CivicConnect Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                     </div>
                     <h1>Join</h1>
                     <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', fontWeight: '500' }}>Register to contribute to your city's progress.</p>

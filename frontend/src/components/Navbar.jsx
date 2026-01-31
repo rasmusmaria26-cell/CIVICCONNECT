@@ -15,9 +15,11 @@ const Navbar = () => {
     return (
         <nav className="navbar">
             <Link to="/" className="nav-logo">
-                <div style={{ width: '32px', height: '32px', background: 'var(--sandal-dark)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <div style={{ width: '12px', height: '12px', border: '2px solid white', borderRadius: '2px' }}></div>
-                </div>
+                <img
+                    src="/logo.png"
+                    alt="CivicConnect Logo"
+                    style={{ width: '40px', height: '40px', objectFit: 'contain', borderRadius: '4px' }}
+                />
                 <span style={{ fontWeight: '800', letterSpacing: '-0.02em' }}>CIVIC<span style={{ color: 'var(--sandal-dark)' }}>CONNECT</span></span>
             </Link>
 

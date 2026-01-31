@@ -27,17 +27,26 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/*" element={
+
+          <Route path="/" element={
             <PrivateRoute>
               <>
                 <Navbar />
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/report" element={<ReportComplaint />} />
-                </Routes>
+                <Home />
               </>
             </PrivateRoute>
           } />
+
+          <Route path="/report" element={
+            <PrivateRoute>
+              <>
+                <Navbar />
+                <ReportComplaint />
+              </>
+            </PrivateRoute>
+          } />
+
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </AuthProvider>
     </Router>

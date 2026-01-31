@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, User, MapPin, Tag, Download, Settings, BarChart3, Database, ShieldCheck } from 'lucide-react';
+import { Briefcase, User, MapPin, Tag, Download, Settings, BarChart3, Database, ShieldCheck, Activity } from 'lucide-react';
 
 const AuthorityDashboard = () => {
     const [complaints, setComplaints] = useState([]);

@@ -15,6 +15,7 @@ const PrivateRoute = ({ children }) => {
 
 const Home = () => {
   const { user } = useAuth();
+  if (!user) return null; // Safety check
   if (user.role === 'AUTHORITY' || user.role === 'ADMIN') return <AuthorityDashboard />;
   return <CitizenDashboard />;
 };

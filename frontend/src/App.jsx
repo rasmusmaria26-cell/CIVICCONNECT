@@ -10,22 +10,23 @@ import ReportComplaint from './pages/ReportComplaint';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  if (loading) return null; // Wait for auth check
+  if (loading) return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface-warm)' }}>
+      <div style={{ color: 'var(--sandal-dark)', fontWeight: '700', letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '0.8rem' }}>Authenticating Hub...</div>
+    </div>
+  );
   return user ? children : <Navigate to="/login" />;
 };
 
-const Home = () => {
-  const { user, loading } = useAuth();
+const DashboardContainer = () => {
+  const { user } = useAuth();
 
-  if (loading) return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface-warm)' }}>
-      <div style={{ color: 'var(--sandal-dark)', fontWeight: '700' }}>Synchronizing...</div>
-    </div>
+  return (
+    <>
+      <Navbar />
+      {(user?.role === 'AUTHORITY' || user?.role === 'ADMIN') ? <AuthorityDashboard /> : <CitizenDashboard />}
+    </>
   );
-
-  if (!user) return <Navigate to="/login" />;
-  if (user.role === 'AUTHORITY' || user.role === 'ADMIN') return <AuthorityDashboard />;
-  return <CitizenDashboard />;
 };
 
 function App() {
@@ -38,10 +39,7 @@ function App() {
 
           <Route path="/" element={
             <PrivateRoute>
-              <>
-                <Navbar />
-                <Home />
-              </>
+              <DashboardContainer />
             </PrivateRoute>
           } />
 
